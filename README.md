@@ -4,4 +4,4 @@ Ce repository contient l'ensemble du code source correspondant au projet develop
 
 Auteurs:
 - Sylvain Pontoreau
-- Felix Billon
+- Félix Billon
