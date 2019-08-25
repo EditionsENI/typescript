@@ -1,0 +1,26 @@
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+require("reflect-metadata");
+const express_1 = __importDefault(require("express"));
+const body_parser_1 = __importDefault(require("body-parser"));
+const morgan_1 = __importDefault(require("morgan"));
+const cors_1 = __importDefault(require("cors"));
+const dotenv_1 = require("dotenv");
+const routeCollection_1 = require("./infrastructure/routeCollection");
+require("./controllers/employeeController");
+require("./controllers/teamController");
+require("./models/repositories/employeeRepository");
+require("./models/repositories/teamRepository");
+dotenv_1.config();
+const app = express_1.default();
+app.use(body_parser_1.default.json());
+app.use(morgan_1.default("dev"));
+app.use(cors_1.default());
+const port = process.env.PORT || 3000;
+const router = express_1.default.Router();
+routeCollection_1.routeCollection.setupRouter(router);
+app.use(router);
+app.listen(port, () => console.log(`Application is listening on port ${port}!`));
