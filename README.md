@@ -7,5 +7,5 @@ Le repertoire [completed](https://github.com/spontoreau/typescript/tree/master/c
 Le répertoire [advanced](https://github.com/spontoreau/typescript/tree/master/advanced) contient une version de l'application avec de nouvelles fonctionnalités.
 
 Auteurs:
-- Sylvain Pontoreau
-- Félix Billon
+- [Sylvain Pontoreau](https://twitter.com/spontoreau)
+- [Félix Billon](https://twitter.com/felix_billon)
