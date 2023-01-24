@@ -5,16 +5,20 @@
   "main": "dist/index.js",
   "scripts": {
     "build": "tsc -p tsconfig.json",
-    "start": "node dist/index.js"
+    "build:watch": "tsc -w",
+    "start": "node dist/index.js",
+    "start:dev": "npm run build && concurrently \"npm run build:watch\" \"npm start\""
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "fastify": "^4.11.0"
+    "concurrently": "^7.6.0",
+    "fastify": "^4.11.0",
+    "fastify-cli": "^5.7.1"
   },
   "devDependencies": {
     "@types/node": "^18.11.18",
-    "typescript": "^5.0.0-dev.20230119"
+    "typescript": "^5.0.0-dev.20230123"
   }
 }

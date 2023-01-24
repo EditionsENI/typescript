@@ -1,19 +1,12 @@
-import fastify from 'fastify';
+import './controllers/employeeController';
+import './controllers/teamController';
+import { RouteCollection } from './core/routeCollection';
+import { ControllerFactory } from './core/controllerFactory';
+import { Server } from './core/server';
 
-const server = fastify();
+const routeCollection = RouteCollection.getInstance();
+const factory = ControllerFactory.getInstance();
 
-server.get('/employee', async (req, res) => {
-    return {
-        firstName: "Evelyn",
-        lastName: "Miller"
-    };
-});
-
-server.listen({ port: 3000}, (err, address) => {
-    if(err) {
-        console.error(err);
-        process.exit(1);
-    }
-
-    console.log(`Server listening at ${address}`);
-});
+const server = new Server(routeCollection, factory);
+server.initialize();
+server.listen();
