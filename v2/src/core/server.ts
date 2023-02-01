@@ -1,65 +1,91 @@
 import fastify, { FastifyInstance } from "fastify";
+import fastifySwagger from '@fastify/swagger';
+import fastifySwaggerUI from '@fastify/swagger-ui';
 import { ControllerFactory } from "./controllerFactory";
 import { RouteCollection } from "./routeCollection";
 import { SchemaCollection } from "./schemaCollection";
 
 export class Server {
-    readonly #factory: ControllerFactory;
-    readonly #routeCollection: RouteCollection;
-    readonly #schemaCollection: SchemaCollection;
-    readonly #fastifyInstance: FastifyInstance;
-    #port?: number;
-    
-    constructor(routeCollection: RouteCollection, schemaCollection: SchemaCollection, factory: ControllerFactory) {
-        this.#routeCollection = routeCollection;
-        this.#schemaCollection = schemaCollection;
-        this.#factory = factory;
-        this.#fastifyInstance = fastify();
+  readonly #factory: ControllerFactory;
+  readonly #routeCollection: RouteCollection;
+  readonly #schemaCollection: SchemaCollection;
+  readonly #fastifyInstance: FastifyInstance;
+  #port?: number;
+  #title?: string;
+  #description?: string;
+  #version?: `${number}.${number}.${number}`;
+
+  constructor(routeCollection: RouteCollection, schemaCollection: SchemaCollection, factory: ControllerFactory) {
+    this.#routeCollection = routeCollection;
+    this.#schemaCollection = schemaCollection;
+    this.#factory = factory;
+    this.#fastifyInstance = fastify();
+  }
+
+  async initialize() {
+    this.#loadConfiguration();
+    await this.#setupOpenApi();
+    this.#setupRouter();
+    await this.#fastifyInstance.ready();
+    this.#fastifyInstance.swagger();
+  }
+
+  setInfo(title: string, description: string, version: `${number}.${number}.${number}`) {
+    this.#description = description;
+    this.#title = title;
+    this.#version = version;
+  }
+
+  async #setupOpenApi() {
+    await this.#fastifyInstance.register(fastifySwagger, {
+      openapi: {
+        info: {
+          title: this.#title || '',
+          description: this.#description || '',
+          version: this.#version || '0.0.0'
+        },
+      }
+    })
+    await this.#fastifyInstance.register(fastifySwaggerUI, {
+      routePrefix: '/documentation'
+    })
+  }
+
+  #loadConfiguration() {
+    this.#port = 3000;
+  }
+
+  #setupRouter() {
+    console.table(this.#schemaCollection.schemas);
+    console.table(this.#schemaCollection.actionBindings);
+    for (const route of this.#routeCollection.routes) {
+      const controller = this.#factory.get(route.controller);
+
+      const method = (controller as any)[route.method];
+
+      if (typeof method !== 'function') {
+        throw new Error(`Action is not a function`);
+      }
+
+      const schema = this.#schemaCollection.getByAction(route.controller, route.method);
+
+      this.#fastifyInstance[route.httpVerb](route.path, {
+        schema
+      }, (req, res) => {
+        const result = method.bind(controller)(req);
+        res.send(result);
+      });
     }
+  }
 
-    initialize() {
-        this.#loadConfiguration();
-        this.#setupRouter();
-    }
+  listen() {
+    this.#fastifyInstance.listen({ port: this.#port }, (err, address) => {
+      if (err) {
+        console.error(err);
+        process.exit(1);
+      }
 
-    #loadConfiguration() {
-        this.#port = 3000;
-    }
-
-    #setupRouter() {
-        console.table(this.#schemaCollection.schemas);
-        console.table(this.#schemaCollection.actionBindings);
-        for(const route of this.#routeCollection.routes) {
-            console.log(`Creating routes for controller: ${route.controller}`);
-            const controller = this.#factory.get(route.controller);
-            
-
-            console.log(`Creating route for method: ${route.method}`);
-            const method = (controller as any)[route.method];
-    
-            if(typeof method !== 'function') {
-                throw new Error(`Action is not a function`);
-            }
-
-            const schema = this.#schemaCollection.getByAction(route.controller, route.method);
-
-            console.log(`Schema for action :${route.method}`);
-            console.log(JSON.stringify(schema));
-    
-            this.#fastifyInstance[route.httpVerb](route.path, {
-                schema
-            }, method.bind(controller));
-        }
-    }
-
-    listen() {
-        this.#fastifyInstance.listen({ port: this.#port }, (err, address) => {
-            if(err) {
-                console.error(err);
-                process.exit(1);
-            }
-        
-            console.log(`Server listening at ${address}`);
-        });
-    }
+      console.log(`Server listening at ${address}`);
+    });
+  }
 }

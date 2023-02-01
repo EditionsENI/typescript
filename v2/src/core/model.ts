@@ -1,9 +1,10 @@
+import { FastifyRequest } from "fastify";
 import { SchemaCollection } from "./schemaCollection";
 import { IController } from "./types";
 
 export const Model = <
   TController extends IController, 
-  TArguments extends any[], 
+  TArguments extends any[],
   TReturn
 >(ctor: new () => unknown) => {
   return (
@@ -13,21 +14,22 @@ export const Model = <
     addInitializer(function (this) {
       new ctor();
       SchemaCollection.getInstance().bind(`${this.constructor.name}#${name.toString()}`, ctor.name);
-      // Let's keep the original method to call it later.
 
       const originalMethod = (this as any)[name];
 
-      // We need a new method to bind the request data to the model
-
-      // Now we gonna define a new method to execute
-      const validateModel = () => {
+      const executeWithModel = (req: FastifyRequest) => {
         // Create a new instance of the model
-        
-        return originalMethod();
+        const model = {
+          ...(req.body as any),
+          ...(req.query as any),
+          ...(req.params as any)
+        };
+
+        return originalMethod(model);
       }
 
       // Replace the method on the instance
-      (this as any)[name] = validateModel.bind(this);
+      (this as any)[name] = executeWithModel.bind(this);
     })
   };
 };

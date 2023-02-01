@@ -2,14 +2,6 @@ import { SchemaProperty } from "../core/schemaProperty";
 
 export class CreateEmployeeModel {
   @SchemaProperty({
-    description: `Employee's identifier`,
-    type: 'string',
-    optional: true,
-    from: 'params'
-  })
-  id!: string;
-
-  @SchemaProperty({
     description: `Employee's first name`,
     type: 'string',
     from: 'body'

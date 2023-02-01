@@ -53,6 +53,7 @@ export class SchemaCollection {
       };
 
       jsonSchemaProperty.properties[key] = { type, description, ...otherProps };
+      jsonSchema[from] = jsonSchemaProperty;
       if(!optional) {
         jsonSchemaProperty.required.push(key);
       }

@@ -8,6 +8,10 @@ const routeCollection = RouteCollection.getInstance();
 const schemaCollection = SchemaCollection.getInstance();
 const factory = ControllerFactory.getInstance();
 
-const server = new Server(routeCollection, schemaCollection, factory);
-server.initialize();
-server.listen();
+(async () => {
+  const server = new Server(routeCollection, schemaCollection, factory);
+  server.setInfo('Employee directory', 'Just a little directory for managing employees', '1.0.0');
+  await server.initialize();
+  server.listen();
+}
+)()

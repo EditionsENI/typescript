@@ -6,7 +6,7 @@ export class ChangeSalaryModel {
     type: 'string',
     from: 'params'
   })
-  id!: string;
+  employeeId!: string;
   
   @SchemaProperty({
     description: `Employee's salary`,
