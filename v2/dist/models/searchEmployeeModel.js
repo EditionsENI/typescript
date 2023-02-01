@@ -33,48 +33,27 @@ var __runInitializers = (this && this.__runInitializers) || function (thisArg, i
     }
     return useValue ? value : void 0;
 };
-var __setFunctionName = (this && this.__setFunctionName) || function (f, name, prefix) {
-    if (typeof name === "symbol") name = name.description ? "[".concat(name.description, "]") : "";
-    return Object.defineProperty(f, "name", { configurable: true, value: prefix ? "".concat(prefix, " ", name) : name });
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.TeamController = void 0;
-const action_1 = require("../core/action");
-const controller_1 = require("../core/controller");
-exports.TeamController = (() => {
-    let _classDecorators = [(0, controller_1.Controller)()];
-    let _classDescriptor;
-    let _classExtraInitializers = [];
-    let _classThis;
+exports.SearchEmployeeModel = void 0;
+const schemaProperty_1 = require("../core/schemaProperty");
+exports.SearchEmployeeModel = (() => {
+    var _a;
     let _instanceExtraInitializers = [];
-    let _getAll_decorators;
-    let _get_decorators;
-    let _post_decorators;
-    var TeamController = _classThis = class {
-        getAll() {
-            throw new Error("Method not implemented.");
-        }
-        get(id) {
-            throw new Error("Method not implemented.");
-        }
-        post(model) {
-            throw new Error("Method not implemented.");
-        }
-        constructor() {
-            __runInitializers(this, _instanceExtraInitializers);
-        }
-    };
-    __setFunctionName(_classThis, "TeamController");
-    (() => {
-        _getAll_decorators = [(0, action_1.Get)()];
-        _get_decorators = [(0, action_1.Get)(':teamId')];
-        _post_decorators = [(0, action_1.Post)()];
-        __esDecorate(_classThis, null, _getAll_decorators, { kind: "method", name: "getAll", static: false, private: false }, null, _instanceExtraInitializers);
-        __esDecorate(_classThis, null, _get_decorators, { kind: "method", name: "get", static: false, private: false }, null, _instanceExtraInitializers);
-        __esDecorate(_classThis, null, _post_decorators, { kind: "method", name: "post", static: false, private: false }, null, _instanceExtraInitializers);
-        __esDecorate(null, _classDescriptor = { value: _classThis }, _classDecorators, { kind: "class", name: _classThis.name }, null, _classExtraInitializers);
-        TeamController = _classThis = _classDescriptor.value;
-        __runInitializers(_classThis, _classExtraInitializers);
-    })();
-    return TeamController = _classThis;
+    let _email_decorators;
+    let _email_initializers = [];
+    return _a = class SearchEmployeeModel {
+            constructor() {
+                this.email = (__runInitializers(this, _instanceExtraInitializers), __runInitializers(this, _email_initializers, void 0));
+            }
+        },
+        (() => {
+            _email_decorators = [(0, schemaProperty_1.SchemaProperty)({
+                    description: `Employee's email`,
+                    type: 'string',
+                    from: 'querystring',
+                    pattern: '^[0-9a-z._-]+@{1}[0-9a-z.-]{2,}[.]{1}[a-z]{2,5}$'
+                })];
+            __esDecorate(null, null, _email_decorators, { kind: "field", name: "email", static: false, private: false }, _email_initializers, _instanceExtraInitializers);
+        })(),
+        _a;
 })();

@@ -8,19 +8,19 @@ export class RouteCollection {
   get routes() {
     return this.#routes;
   }
-  
+
   private constructor() {
     this.#routes = [];
   }
 
   static getInstance(): RouteCollection {
-    if(!this.#instance) {
-        this.#instance = new RouteCollection();
+    if (!this.#instance) {
+      this.#instance = new RouteCollection();
     }
 
     return this.#instance;
-}
-  
+  }
+
   add(
     action: IAction,
     httpVerb: HttpVerb,
@@ -30,6 +30,6 @@ export class RouteCollection {
       ...action,
       httpVerb,
       path: `/${action.controller.replace('Controller', '').toLowerCase()}/${path}`
-    });    
+    });
   }
 }

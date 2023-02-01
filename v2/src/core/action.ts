@@ -33,5 +33,4 @@ const Patch = (path?: string) => {
   return action("patch", path);
 };
 
-
 export { Get, Post, Patch };

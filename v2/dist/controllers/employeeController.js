@@ -41,6 +41,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.EmployeeController = void 0;
 const action_1 = require("../core/action");
 const controller_1 = require("../core/controller");
+const createEmployeeModel_1 = require("../models/createEmployeeModel");
+const model_1 = require("../core/model");
+const changeSalaryModel_1 = require("../models/changeSalaryModel");
+const searchEmployeeModel_1 = require("../models/searchEmployeeModel");
 exports.EmployeeController = (() => {
     let _classDecorators = [(0, controller_1.Controller)()];
     let _classDescriptor;
@@ -48,20 +52,20 @@ exports.EmployeeController = (() => {
     let _classThis;
     let _instanceExtraInitializers = [];
     let _getAll_decorators;
-    let _get_decorators;
+    let _search_decorators;
     let _post_decorators;
-    let _changeTeam_decorators;
+    let _changeSalary_decorators;
     var EmployeeController = _classThis = class {
         getAll() {
             throw new Error("Method not implemented.");
         }
-        get(id) {
+        search(model) {
             throw new Error("Method not implemented.");
         }
         post(model) {
             throw new Error("Method not implemented.");
         }
-        changeTeam() {
+        changeSalary(model) {
             throw new Error("Method not implemented.");
         }
         constructor() {
@@ -71,13 +75,13 @@ exports.EmployeeController = (() => {
     __setFunctionName(_classThis, "EmployeeController");
     (() => {
         _getAll_decorators = [(0, action_1.Get)()];
-        _get_decorators = [(0, action_1.Get)(':employeeId')];
-        _post_decorators = [(0, action_1.Post)()];
-        _changeTeam_decorators = [(0, action_1.Patch)(":employeeId/team/:teamId")];
+        _search_decorators = [(0, action_1.Get)('search'), (0, model_1.Model)(searchEmployeeModel_1.SearchEmployeeModel)];
+        _post_decorators = [(0, action_1.Post)(), (0, model_1.Model)(createEmployeeModel_1.CreateEmployeeModel)];
+        _changeSalary_decorators = [(0, model_1.Model)(changeSalaryModel_1.ChangeSalaryModel), (0, action_1.Patch)(":employeeId")];
         __esDecorate(_classThis, null, _getAll_decorators, { kind: "method", name: "getAll", static: false, private: false }, null, _instanceExtraInitializers);
-        __esDecorate(_classThis, null, _get_decorators, { kind: "method", name: "get", static: false, private: false }, null, _instanceExtraInitializers);
+        __esDecorate(_classThis, null, _search_decorators, { kind: "method", name: "search", static: false, private: false }, null, _instanceExtraInitializers);
         __esDecorate(_classThis, null, _post_decorators, { kind: "method", name: "post", static: false, private: false }, null, _instanceExtraInitializers);
-        __esDecorate(_classThis, null, _changeTeam_decorators, { kind: "method", name: "changeTeam", static: false, private: false }, null, _instanceExtraInitializers);
+        __esDecorate(_classThis, null, _changeSalary_decorators, { kind: "method", name: "changeSalary", static: false, private: false }, null, _instanceExtraInitializers);
         __esDecorate(null, _classDescriptor = { value: _classThis }, _classDecorators, { kind: "class", name: _classThis.name }, null, _classExtraInitializers);
         EmployeeController = _classThis = _classDescriptor.value;
         __runInitializers(_classThis, _classExtraInitializers);

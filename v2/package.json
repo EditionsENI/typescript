@@ -6,14 +6,12 @@
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "build:watch": "tsc -w",
-    "start": "node dist/index.js",
-    "start:dev": "npm run build && concurrently \"npm run build:watch\" \"npm start\""
+    "start": "node dist/index.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "concurrently": "^7.6.0",
     "fastify": "^4.11.0",
     "fastify-cli": "^5.7.1"
   },

@@ -1,12 +1,13 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 require("./controllers/employeeController");
-require("./controllers/teamController");
 const routeCollection_1 = require("./core/routeCollection");
 const controllerFactory_1 = require("./core/controllerFactory");
 const server_1 = require("./core/server");
+const schemaCollection_1 = require("./core/schemaCollection");
 const routeCollection = routeCollection_1.RouteCollection.getInstance();
+const schemaCollection = schemaCollection_1.SchemaCollection.getInstance();
 const factory = controllerFactory_1.ControllerFactory.getInstance();
-const server = new server_1.Server(routeCollection, factory);
+const server = new server_1.Server(routeCollection, schemaCollection, factory);
 server.initialize();
 server.listen();
