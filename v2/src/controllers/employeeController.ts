@@ -7,39 +7,47 @@ import { Employee } from "../models/employee";
 import { ChangeSalaryModel } from "../models/changeSalaryModel";
 import { SearchEmployeeModel } from "../models/searchEmployeeModel";
 import { GetEmployeeByIdModel } from "../models/getEmployeeByIdModel";
+import { Repository } from "../data/repository";
 
 @Controller()
 export class EmployeeController implements IController<CreateEmployeeModel> {
-    @Get()
-    getAll(): Promise<readonly Readonly<CreateEmployeeModel>[]> {
-        throw new Error("Method not implemented.");
-    }
+  #employeeRepository: Repository<Employee>;
 
-    @Get(':id')
-    @Model(GetEmployeeByIdModel)
-    get(model: GetEmployeeByIdModel): Promise<readonly Readonly<CreateEmployeeModel>[]> {
-        console.log(JSON.stringify(model));
-        throw new Error("Method not implemented.");
-    }
+  constructor() {
+    this.#employeeRepository = new Repository();
+  }
 
-    @Get('search')
-    @Model(SearchEmployeeModel)
-    search(model: SearchEmployeeModel): Promise<Readonly<Employee>> {
-        console.log(JSON.stringify(model));
-        throw new Error("Method not implemented.");
-    }
+  @Get()
+  async getAll() {
+    return this.#employeeRepository.retreiveAll();
+  }
 
-    @Post()
-    @Model(CreateEmployeeModel)
-    post(model: CreateEmployeeModel): Promise<void> {
-        console.log(JSON.stringify(model));
-        throw new Error("Method not implemented.");
-    }
+  @Get(':id')
+  @Model(GetEmployeeByIdModel)
+  async get(model: GetEmployeeByIdModel) {
+    return this.#employeeRepository.retreiveById(model.id);
+  }
 
-    @Model(ChangeSalaryModel)
-    @Patch(":employeeId")
-    changeSalary(model: ChangeSalaryModel): Promise<void> {
-        console.log(JSON.stringify(model));
-        throw new Error("Method not implemented.");
-    }
+  @Get('search')
+  @Model(SearchEmployeeModel)
+  async search(model: SearchEmployeeModel) {
+    console.table(model);
+    return this.#employeeRepository.retreiveBy({
+      email: model.email
+    })
+  }
+
+  @Post()
+  @Model(CreateEmployeeModel)
+  async post(model: CreateEmployeeModel): Promise<void> {
+    return this.#employeeRepository.create(model);
+  }
+
+  @Model(ChangeSalaryModel)
+  @Patch(":employeeId")
+  async changeSalary(model: ChangeSalaryModel): Promise<void> {
+    const employee = await this.#employeeRepository.retreiveById(model.employeeId);
+    employee.salary = model.salary;
+    return this.#employeeRepository.update(employee);
+  }
 }

@@ -18,17 +18,15 @@ export const Model = <
       const originalMethod = (this as any)[name];
 
       const executeWithModel = (req: FastifyRequest) => {
-        // Create a new instance of the model
         const model = {
           ...(req.body as any),
           ...(req.query as any),
           ...(req.params as any)
         };
 
-        return originalMethod(model);
+        return originalMethod.bind(this)(model);
       }
 
-      // Replace the method on the instance
       (this as any)[name] = executeWithModel.bind(this);
     })
   };

@@ -56,12 +56,10 @@ export class Server {
   }
 
   #setupRouter() {
-    console.table(this.#schemaCollection.schemas);
-    console.table(this.#schemaCollection.actionBindings);
     for (const route of this.#routeCollection.routes) {
       const controller = this.#factory.get(route.controller);
 
-      const method = (controller as any)[route.method];
+      const method: Function = (controller as any)[route.method];
 
       if (typeof method !== 'function') {
         throw new Error(`Action is not a function`);
@@ -71,8 +69,8 @@ export class Server {
 
       this.#fastifyInstance[route.httpVerb](route.path, {
         schema
-      }, (req, res) => {
-        const result = method.bind(controller)(req);
+      }, async (req, res) => {
+        const result = await method.bind(controller)(req);
         res.send(result);
       });
     }
