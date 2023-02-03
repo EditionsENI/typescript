@@ -8,10 +8,13 @@ import { ChangeSalaryModel } from "../models/changeSalaryModel";
 import { SearchEmployeeModel } from "../models/searchEmployeeModel";
 import { GetEmployeeByIdModel } from "../models/getEmployeeByIdModel";
 import { Repository } from "../data/repository";
+import { Inject } from "../core/inject";
+import { DependencyKeys } from "../dependencyKeys";
 
 @Controller()
 export class EmployeeController implements IController<CreateEmployeeModel> {
-  #employeeRepository: Repository<Employee>;
+  @Inject(DependencyKeys.repository)
+  #employeeRepository!: Repository<Employee>;
 
   constructor() {
     this.#employeeRepository = new Repository();

@@ -3,7 +3,8 @@ import { IController } from "./types";
 export class ControllerFactory {
     static #instance: ControllerFactory;
 
-    readonly #controllerInstances: Map<string, IController> = new Map();
+    readonly #controllers: Map<string, new () => IController> = new Map();
+    readonly #instances: Map<string, IController> = new Map();
 
     static getInstance(): ControllerFactory {
         if(!this.#instance) {
@@ -13,15 +14,21 @@ export class ControllerFactory {
         return this.#instance;
     }
 
-    register(ctor: new () => IController) {
-        this.#controllerInstances.set(ctor.name, new ctor());
+    initialize() {
+        for(const [key ,controller] of this.#controllers) {
+            this.#instances.set(key, new controller());
+        }
     }
 
-    get(controllerName: string) {
-        const controllerInstance = this.#controllerInstances.get(controllerName);
-        if(!controllerInstance) {
+    register(ctor: new () => IController) {
+        this.#controllers.set(ctor.name, ctor);
+    }
+
+    get(controllerName: string): IController {
+        const instance = this.#instances.get(controllerName);
+        if(!instance) {
             throw new Error(`Unknown controller: ${controllerName}`);
         }
-        return controllerInstance;
+        return instance;
     }
 }

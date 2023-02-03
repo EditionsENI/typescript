@@ -1,9 +1,12 @@
+import { Inject } from "../core/inject";
+import { DependencyKeys } from "../dependencyKeys";
 import { Entity } from "./entity";
-import { FileStorage, Storage } from "./storage";
+import { Storage } from "./storage";
 import * as uuid from 'uuid';
 
 export class Repository<TEntity extends Entity> {
-  #storage: Storage<TEntity> = new FileStorage();
+  @Inject(DependencyKeys.storage)
+  #storage!: Storage<TEntity>;
 
   async retreiveAll() {
     return this.#storage.getEntities();

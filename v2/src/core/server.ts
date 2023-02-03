@@ -5,44 +5,36 @@ import { ControllerFactory } from "./controllerFactory";
 import { RouteCollection } from "./routeCollection";
 import { SchemaCollection } from "./schemaCollection";
 
-export class Server {
-  readonly #factory: ControllerFactory;
-  readonly #routeCollection: RouteCollection;
-  readonly #schemaCollection: SchemaCollection;
-  readonly #fastifyInstance: FastifyInstance;
-  #port?: number;
-  #title?: string;
-  #description?: string;
-  #version?: `${number}.${number}.${number}`;
+export interface ServerOptions {
+  title: string;
+  description: string;
+  version: `${number}.${number}.${number}`;
+}
 
-  constructor(routeCollection: RouteCollection, schemaCollection: SchemaCollection, factory: ControllerFactory) {
-    this.#routeCollection = routeCollection;
-    this.#schemaCollection = schemaCollection;
-    this.#factory = factory;
+export class Server {
+  #fastifyInstance: FastifyInstance;
+  #options: ServerOptions;
+
+  constructor(options: ServerOptions) {
     this.#fastifyInstance = fastify();
+    this.#options = options;
   }
 
   async initialize() {
-    this.#loadConfiguration();
     await this.#setupOpenApi();
     this.#setupRouter();
+
     await this.#fastifyInstance.ready();
     this.#fastifyInstance.swagger();
-  }
-
-  setInfo(title: string, description: string, version: `${number}.${number}.${number}`) {
-    this.#description = description;
-    this.#title = title;
-    this.#version = version;
   }
 
   async #setupOpenApi() {
     await this.#fastifyInstance.register(fastifySwagger, {
       openapi: {
         info: {
-          title: this.#title || '',
-          description: this.#description || '',
-          version: this.#version || '0.0.0'
+          title: this.#options.title,
+          description: this.#options.description ,
+          version: this.#options.version,
         },
       }
     })
@@ -51,13 +43,10 @@ export class Server {
     })
   }
 
-  #loadConfiguration() {
-    this.#port = 3000;
-  }
-
   #setupRouter() {
-    for (const route of this.#routeCollection.routes) {
-      const controller = this.#factory.get(route.controller);
+    ControllerFactory.getInstance().initialize();
+    for (const route of RouteCollection.getInstance().routes) {
+      const controller = ControllerFactory.getInstance().get(route.controller);
 
       const method: Function = (controller as any)[route.method];
 
@@ -65,7 +54,7 @@ export class Server {
         throw new Error(`Action is not a function`);
       }
 
-      const schema = this.#schemaCollection.getByAction(route.controller, route.method);
+      const schema = SchemaCollection.getInstance().getByAction(route.controller, route.method);
 
       this.#fastifyInstance[route.httpVerb](route.path, {
         schema
@@ -77,7 +66,7 @@ export class Server {
   }
 
   listen() {
-    this.#fastifyInstance.listen({ port: this.#port }, (err, address) => {
+    this.#fastifyInstance.listen({ port: 3000 }, (err, address) => {
       if (err) {
         console.error(err);
         process.exit(1);
