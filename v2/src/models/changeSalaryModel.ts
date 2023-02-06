@@ -1,4 +1,4 @@
-import { SchemaProperty } from "../core/schemaProperty";
+import { SchemaProperty } from "../core/schema/schemaProperty";
 
 export class ChangeSalaryModel {
   @SchemaProperty({

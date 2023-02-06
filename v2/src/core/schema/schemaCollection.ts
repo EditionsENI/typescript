@@ -1,4 +1,4 @@
-import { JsonSchema, JsonSchemaProperty, Schema, SchemaPropertyOptions } from "./types";
+import { JsonSchema, Schema, SchemaPropertyOptions } from "./types";
 
 export class SchemaCollection {
   static #instance: SchemaCollection;

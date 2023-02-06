@@ -1,9 +1,9 @@
 import { readFile, writeFile, access } from "fs/promises";
 import { join } from "path";
-import { Entity } from "./entity";
 import { MemoryStorage } from "./memoryStorage";
+import { IEntity } from "./types";
 
-export class FileStorage<TEntity extends Entity> extends MemoryStorage<TEntity> {
+export class FileStorage<TEntity extends IEntity> extends MemoryStorage<TEntity> {
   #loaded: boolean;
   #jsonPath: string;
 

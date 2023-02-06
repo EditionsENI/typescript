@@ -1,6 +1,6 @@
 import { FastifyRequest } from "fastify";
-import { SchemaCollection } from "./schemaCollection";
 import { IController } from "./types";
+import { SchemaCollection } from "../schema/schemaCollection";
 
 export const Model = <
   TController extends IController, 

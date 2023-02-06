@@ -1,11 +1,11 @@
 import fastify, { FastifyInstance } from "fastify";
 import fastifySwagger from '@fastify/swagger';
 import fastifySwaggerUI from '@fastify/swagger-ui';
-import { ControllerFactory } from "./controllerFactory";
-import { RouteCollection } from "./routeCollection";
-import { SchemaCollection } from "./schemaCollection";
+import { RouteCollection } from "./mvc/routeCollection";
+import { ControllerFactory } from "./mvc/controllerFactory";
+import { SchemaCollection } from "./schema/schemaCollection";
 
-export interface ServerOptions {
+interface ServerOptions {
   title: string;
   description: string;
   version: `${number}.${number}.${number}`;
@@ -22,6 +22,7 @@ export class Server {
 
   async initialize() {
     await this.#setupOpenApi();
+    ControllerFactory.getInstance().initialize();
     this.#setupRouter();
 
     await this.#fastifyInstance.ready();
@@ -44,7 +45,6 @@ export class Server {
   }
 
   #setupRouter() {
-    ControllerFactory.getInstance().initialize();
     for (const route of RouteCollection.getInstance().routes) {
       const controller = ControllerFactory.getInstance().get(route.controller);
 

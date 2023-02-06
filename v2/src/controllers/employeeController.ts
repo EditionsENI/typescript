@@ -1,20 +1,20 @@
-import { Get, Post, Patch } from "../core/action";
-import { Controller } from "../core/controller";
-import { IController } from "../core/types";
+import { IController } from "../core/mvc/types";
+import { Controller } from "../core/mvc/controller";
+import { Get, Post, Patch } from "../core/mvc/action";
+import { Model } from "../core/mvc/model";
+import { Inject } from "../core/ioc/inject";
+import { Employee } from "../entities/employee";
 import { CreateEmployeeModel } from "../models/createEmployeeModel";
-import { Model } from "../core/model";
-import { Employee } from "../models/employee";
 import { ChangeSalaryModel } from "../models/changeSalaryModel";
 import { SearchEmployeeModel } from "../models/searchEmployeeModel";
 import { GetEmployeeByIdModel } from "../models/getEmployeeByIdModel";
-import { Repository } from "../data/repository";
-import { Inject } from "../core/inject";
+import { Repository } from "../core/data/repository";
 import { DependencyKeys } from "../dependencyKeys";
 
 @Controller()
 export class EmployeeController implements IController<CreateEmployeeModel> {
   @Inject(DependencyKeys.repository)
-  #employeeRepository!: Repository<Employee>;
+  readonly #employeeRepository!: Repository<Employee>;
 
   constructor() {
     this.#employeeRepository = new Repository();

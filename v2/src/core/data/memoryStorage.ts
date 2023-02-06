@@ -1,7 +1,6 @@
-import { Entity } from "./entity";
-import { Storage } from "./storage";
+import { IEntity, Storage } from "./types";
 
-export class MemoryStorage<TEntity extends Entity> implements Storage<Entity> {
+export class MemoryStorage<TEntity extends IEntity> implements Storage<IEntity> {
   protected entities!: Array<TEntity>;
 
   constructor() {

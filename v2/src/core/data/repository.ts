@@ -1,10 +1,9 @@
-import { Inject } from "../core/inject";
-import { DependencyKeys } from "../dependencyKeys";
-import { Entity } from "./entity";
-import { Storage } from "./storage";
+import { Inject } from "../ioc/inject";
+import { IEntity, Storage } from "./types";
+import { DependencyKeys } from "../../dependencyKeys";
 import * as uuid from 'uuid';
 
-export class Repository<TEntity extends Entity> {
+export class Repository<TEntity extends IEntity> {
   @Inject(DependencyKeys.storage)
   #storage!: Storage<TEntity>;
 

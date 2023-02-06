@@ -1,4 +1,6 @@
-export class Employee {
+import { IEntity } from '../core/data/types';
+
+export class Employee implements IEntity {
   id!: string;
   firstName!: string;
   lastName!: string;

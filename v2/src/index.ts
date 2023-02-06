@@ -1,10 +1,10 @@
 
 import './controllers/employeeController';
 import { Server } from './core/server';
-import { DependencyCollection } from './core/dependencyCollection';
+import { DependencyCollection } from './core/ioc/dependencyCollection';
 import { DependencyKeys } from './dependencyKeys';
-import { Repository } from './data/repository';
-import { FileStorage } from './data/fileStorage';
+import { Repository } from './core/data/repository';
+import { FileStorage } from './core/data/fileStorage';
 
 (async () => {
   DependencyCollection.getInstance().register(DependencyKeys.repository, Repository);
