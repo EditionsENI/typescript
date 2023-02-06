@@ -1,5 +1,7 @@
+import { Injectable } from "../ioc/injectable";
 import { IEntity, Storage } from "./types";
 
+@Injectable('MEMORY_STORAGE')
 export class MemoryStorage<TEntity extends IEntity> implements Storage<IEntity> {
   protected entities!: Array<TEntity>;
 

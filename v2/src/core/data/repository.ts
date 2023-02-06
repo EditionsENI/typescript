@@ -1,10 +1,11 @@
 import { Inject } from "../ioc/inject";
+import { Injectable } from "../ioc/injectable";
 import { IEntity, Storage } from "./types";
-import { DependencyKeys } from "../../dependencyKeys";
 import * as uuid from 'uuid';
 
+@Injectable()
 export class Repository<TEntity extends IEntity> {
-  @Inject(DependencyKeys.storage)
+  @Inject('FILE_STORAGE')
   #storage!: Storage<TEntity>;
 
   async retreiveAll() {

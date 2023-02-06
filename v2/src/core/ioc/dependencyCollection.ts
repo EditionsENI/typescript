@@ -2,7 +2,7 @@
 export class DependencyCollection {
   static #instance: DependencyCollection;
 
-  #dependencies: Map<symbol, new () => unknown>;
+  #dependencies: Map<string, new () => unknown>;
   
   private constructor() {
     this.#dependencies = new Map();
@@ -16,11 +16,11 @@ export class DependencyCollection {
     return this.#instance;
   }
 
-  register<TDependency>(dependencyKey: symbol, ctor: new () => TDependency) {
+  register<TDependency>(dependencyKey: string, ctor: new () => TDependency) {
     this.#dependencies.set(dependencyKey, ctor)
   }
 
-  get<T>(dependencyKey: symbol): T {
+  get<T>(dependencyKey: string): T {
     const ctor = this.#dependencies.get(dependencyKey);
 
     if(!ctor) {

@@ -1,15 +1,11 @@
 
-import './controllers/employeeController';
 import { Server } from './core/server';
-import { DependencyCollection } from './core/ioc/dependencyCollection';
-import { DependencyKeys } from './dependencyKeys';
-import { Repository } from './core/data/repository';
-import { FileStorage } from './core/data/fileStorage';
+import './core/data/repository';
+import './core/data/fileStorage';
+import './core/data/memoryStorage';
+import './controllers/employeeController';
 
 (async () => {
-  DependencyCollection.getInstance().register(DependencyKeys.repository, Repository);
-  DependencyCollection.getInstance().register(DependencyKeys.storage, FileStorage);
-
   const server = new Server({
     title: 'Employee directory', 
     description: 'Just a little directory for managing employees', 

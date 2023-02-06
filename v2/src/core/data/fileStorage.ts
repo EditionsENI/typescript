@@ -2,7 +2,9 @@ import { readFile, writeFile, access } from "fs/promises";
 import { join } from "path";
 import { MemoryStorage } from "./memoryStorage";
 import { IEntity } from "./types";
+import { Injectable } from "../ioc/injectable";
 
+@Injectable('FILE_STORAGE')
 export class FileStorage<TEntity extends IEntity> extends MemoryStorage<TEntity> {
   #loaded: boolean;
   #jsonPath: string;

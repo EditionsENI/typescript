@@ -21,16 +21,14 @@ const action = <
 };
 
 
-const Get = (path?: string) => {
+export const Get = (path?: string) => {
   return action("get", path);
 };
 
-const Post = (path?: string) => {
+export const Post = (path?: string) => {
   return action("post", path);
 };
 
-const Patch = (path?: string) => {
+export const Patch = (path?: string) => {
   return action("patch", path);
 };
-
-export { Get, Post, Patch };
