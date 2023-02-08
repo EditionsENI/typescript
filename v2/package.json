@@ -4,8 +4,9 @@
   "description": "",
   "main": "dist/index.js",
   "scripts": {
-    "build": "tsc -p tsconfig.json",
-    "build:watch": "tsc -w",
+    "prebuild": "rimraf dist",
+    "build:prod": "tsc -p tsconfig.prod.json",
+    "build": "tsc",
     "start": "node dist/index.js"
   },
   "keywords": [],
@@ -21,6 +22,7 @@
   },
   "devDependencies": {
     "@types/node": "^18.11.18",
+    "rimraf": "^4.1.2",
     "typescript": "^5.0.0-dev.20230123"
   }
 }
