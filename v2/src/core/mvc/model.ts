@@ -1,23 +1,23 @@
 import { FastifyRequest } from "fastify";
-import { IController } from "./types";
-import { SchemaCollection } from "../schema/schemaCollection";
+import { ModelBindings } from "./modelBindings";
 
 export const Model = <
-  TController extends IController, 
+  TController, 
   TArguments extends any[],
   TReturn
->(ctor: new () => unknown) => {
+>(modelClass: new () => unknown) => {
   return (
     target: (this: TController, ...args: TArguments) => TReturn,
     { name, addInitializer } : ClassMethodDecoratorContext<TController>
   ) => {
     addInitializer(function (this) {
-      new ctor();
-      SchemaCollection.getInstance().bind(`${this.constructor.name}#${name.toString()}`, ctor.name);
+      new modelClass();
+      ModelBindings.getInstance().bind((this as any).constructor.name, name.toString(), modelClass.name);
 
       const originalMethod = (this as any)[name];
 
       const executeWithModel = (req: FastifyRequest) => {
+
         const model = {
           ...(req.body as any),
           ...(req.query as any),

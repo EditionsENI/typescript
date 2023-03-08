@@ -1,10 +1,8 @@
-import { IController } from "./types";
-
 export class ControllerFactory {
     static #instance: ControllerFactory;
 
-    readonly #controllers: Map<string, new () => IController> = new Map();
-    readonly #instances: Map<string, IController> = new Map();
+    readonly #controllers: Map<string, new () => unknown> = new Map();
+    readonly #instances: Map<string, unknown> = new Map();
 
     static getInstance(): ControllerFactory {
         if(!this.#instance) {
@@ -20,11 +18,11 @@ export class ControllerFactory {
         }
     }
 
-    register(ctor: new () => IController) {
+    register(ctor: new () => unknown) {
         this.#controllers.set(ctor.name, ctor);
     }
 
-    get(controllerName: string): IController {
+    get(controllerName: string) {
         const instance = this.#instances.get(controllerName);
         if(!instance) {
             throw new Error(`Unknown controller: ${controllerName}`);

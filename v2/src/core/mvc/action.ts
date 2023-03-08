@@ -1,8 +1,8 @@
-import { HttpVerb, IController } from "./types";
+import { HttpVerb } from "./types";
 import { RouteCollection } from "./routeCollection";
 
 const action = <
-  TController extends IController, 
+  TController, 
   TArguments extends any[], 
   TReturn
 >(httpVerb: HttpVerb, path?: string) => {
@@ -12,7 +12,7 @@ const action = <
   ) => {
     addInitializer(function (this) {
       RouteCollection.getInstance().add({
-        controller: this.constructor.name,
+        controller: (this as any).constructor.name,
         method: name.toString()},
         httpVerb,
         path || "");

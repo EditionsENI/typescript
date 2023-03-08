@@ -1,8 +1,7 @@
 import { ControllerFactory } from "./controllerFactory";
-import { IController } from "./types";
 
 export const Controller = () => {
-  return (target: new (...args: unknown[]) => IController, context: ClassDecoratorContext) => {
+  return (target: new (...args: unknown[]) => unknown, context: ClassDecoratorContext) => {
     ControllerFactory.getInstance().register(target);
   };
 };

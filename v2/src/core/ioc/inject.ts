@@ -1,9 +1,8 @@
-import { DependencyCollection } from "./dependencyCollection";
+import { DependencyContainer } from "./dependencyContainer";
 
-export const Inject = <TClass, TValue>(key?: string) => {
-  return (target: undefined, { name }: ClassFieldDecoratorContext<TClass, TValue>) => {
-    return function(this: TClass, value: TValue) {    
-      return DependencyCollection.getInstance().get<TValue>(key ?? name.toString().replace('#', '').toUpperCase());
+export const Inject = <TClass, TValue>(target: undefined, { name, private: isPrivate }: ClassFieldDecoratorContext<TClass, TValue>) => {
+    return function(this: TClass) {
+      const dependencyKey = name.toString();
+      return DependencyContainer.getInstance().get<TValue>(isPrivate ? dependencyKey.replace('#', '') : dependencyKey);
     }
   };
-};

@@ -4,6 +4,10 @@ import fastifySwaggerUI from '@fastify/swagger-ui';
 import { RouteCollection } from "./mvc/routeCollection";
 import { ControllerFactory } from "./mvc/controllerFactory";
 import { SchemaCollection } from "./schema/schemaCollection";
+import { ModelBindings } from "./mvc/modelBindings";
+import { DependencyContainer } from "./ioc/dependencyContainer";
+import { Repository } from "./data/repository";
+import { FileStorage } from "./data/fileStorage";
 
 interface ServerOptions {
   title: string;
@@ -22,11 +26,17 @@ export class Server {
 
   async initialize() {
     await this.#setupOpenApi();
+    this.initializeDependencies();
     ControllerFactory.getInstance().initialize();
     this.#setupRouter();
 
     await this.#fastifyInstance.ready();
     this.#fastifyInstance.swagger();
+  }
+
+  initializeDependencies() {
+    DependencyContainer.getInstance().register('repository', Repository);
+    DependencyContainer.getInstance().register('storage', FileStorage);
   }
 
   async #setupOpenApi() {
@@ -54,7 +64,8 @@ export class Server {
         throw new Error(`Action is not a function`);
       }
 
-      const schema = SchemaCollection.getInstance().getByAction(route.controller, route.method);
+      const schemaName = ModelBindings.getInstance().get(route.controller, route.method);
+      const schema = schemaName ? SchemaCollection.getInstance().getJsonSchema(schemaName) : undefined;
 
       this.#fastifyInstance[route.httpVerb](route.path, {
         schema

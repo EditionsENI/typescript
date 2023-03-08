@@ -1,4 +1,3 @@
-
 type SchemaFrom = 'params' | 'querystring' | 'body';
 
 type SchemaPropertyIntOptions = {
@@ -25,10 +24,7 @@ export interface Schema {
 
 interface JsonSchemaProperty {
   type: 'object',
-  properties: { [key: string]: {
-    type: 'integer' | 'string',
-    description?: string;
-  }}
+  properties: { [key: string]: Omit<SchemaPropertyOptions, 'from'>}
   required: Array<string>
 }
 

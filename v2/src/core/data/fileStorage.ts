@@ -2,16 +2,13 @@ import { readFile, writeFile, access } from "fs/promises";
 import { join } from "path";
 import { MemoryStorage } from "./memoryStorage";
 import { IEntity } from "./types";
-import { Injectable } from "../ioc/injectable";
 
-@Injectable('FILE_STORAGE')
 export class FileStorage<TEntity extends IEntity> extends MemoryStorage<TEntity> {
-  #loaded: boolean;
+  #loaded?: true;
   #jsonPath: string;
 
   constructor() {
     super();
-    this.#loaded = false;
     this.#jsonPath = join(__dirname, 'db.json');
   }
 
@@ -33,6 +30,7 @@ export class FileStorage<TEntity extends IEntity> extends MemoryStorage<TEntity>
   
       const json = await readFile(this.#jsonPath, 'utf-8');
       this.entities = JSON.parse(json) as Array<TEntity>;
+      this.#loaded = true;
     }
   }
 

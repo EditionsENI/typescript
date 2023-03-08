@@ -1,22 +1,21 @@
+export class DependencyContainer {
+  static #instance: DependencyContainer;
 
-export class DependencyCollection {
-  static #instance: DependencyCollection;
-
-  #dependencies: Map<string, new () => unknown>;
+  #dependencies: Map<string, new (...args: unknown[]) => unknown>;
   
   private constructor() {
     this.#dependencies = new Map();
   }
 
-  static getInstance(): DependencyCollection {
+  static getInstance(): DependencyContainer {
     if(!this.#instance) {
-        this.#instance = new DependencyCollection();
+        this.#instance = new DependencyContainer();
     }
 
     return this.#instance;
   }
 
-  register<TDependency>(dependencyKey: string, ctor: new () => TDependency) {
+  register<TDependency>(dependencyKey: string, ctor: new (...args: any[]) => TDependency) {
     this.#dependencies.set(dependencyKey, ctor)
   }
 
