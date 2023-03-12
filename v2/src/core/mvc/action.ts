@@ -12,7 +12,7 @@ const action = <
   ) => {
     addInitializer(function () {
       RouteCollection.getInstance().add({
-        controller: this.constructor.name.replace('Controller', '').toLowerCase(),
+        controller: this.constructor.name,
         action: name.toString(), 
         httpVerb
       });

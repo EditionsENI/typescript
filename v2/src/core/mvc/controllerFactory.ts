@@ -12,7 +12,7 @@ export class ControllerFactory {
     }
 
     register(ctor: new () => unknown) {
-        this.#instances.set(ctor.name.replace('Controller', '').toLowerCase(), new ctor());
+        this.#instances.set(ctor.name, new ctor());
     }
 
     get(controllerName: string) {

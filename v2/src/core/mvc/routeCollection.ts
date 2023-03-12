@@ -26,7 +26,7 @@ export class RouteCollection {
   ) {
     this.#routes.push({
       ...route,
-      path: `/${route.controller}`
+      path: `/${route.controller.replace('Controller', '').toLowerCase()}`
     });
   }
 }
