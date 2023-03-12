@@ -7,12 +7,7 @@ import { Server } from './core/server';
 (async () => {
   DependencyContainer.getInstance().register('repository', Repository);
   DependencyContainer.getInstance().register('storage', FileStorage);
-  const server = new Server({
-    title: 'Employee directory', 
-    description: 'Just a little directory for managing employees', 
-    version: '1.0.0'
-  });
-
+  const server = new Server();
   await server.start();
 }
 )()

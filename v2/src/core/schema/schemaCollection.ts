@@ -1,12 +1,12 @@
-import { JsonSchema, Schema, SchemaPropertyOptions } from "./types";
+import { Schema, SchemaPropertyOptions } from "./types";
 
 export class SchemaCollection {
   static #instance: SchemaCollection;
 
-  #schemas: Map<string, Schema>;
+  #schemas: Map<string, Schema> = new Map();
 
   private constructor() {
-    this.#schemas = new Map();
+    
   }
 
   static getInstance(): SchemaCollection {
@@ -18,38 +18,21 @@ export class SchemaCollection {
   }
 
   add(schemaName: string, propertyName: string, options: SchemaPropertyOptions) {
-    const schema = this.#schemas.get(schemaName) || {};
-
-    this.#schemas.set(schemaName, {
-      ...schema,
-      [propertyName]: options
-    });
-  }
-
-  getJsonSchema(schemaName: string) {
-    const schema = this.#schemas.get(schemaName);
-
-    if (!schema)
-      throw new Error(`Unknown schema: ${schemaName}`);
-
-    const jsonSchema: JsonSchema = {};
-
-    for (const key in schema) {
-      const { from, type, optional, description, ...otherProps } = schema[key];
-
-      const jsonSchemaProperty = jsonSchema[from] || {
+    const schema = this.#schemas.get(schemaName) || {
+      body: {
         type: 'object',
         properties: {},
         required: []
-      };
+      },
+    } satisfies Schema;
 
-      jsonSchemaProperty.properties[key] = { type, description, ...otherProps };
-      jsonSchema[from] = jsonSchemaProperty;
-      
-      if (!optional) {
-        jsonSchemaProperty.required.push(key);
-      }
-    }
-    return jsonSchema;
+    schema.body.properties[propertyName] = options;
+    schema.body.required.push(propertyName);
+
+    this.#schemas.set(schemaName, schema);
+  }
+
+  getSchema(schemaName: string) {
+    return this.#schemas.get(schemaName);
   }
 }

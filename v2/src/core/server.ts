@@ -7,9 +7,6 @@ import { RouteCollection } from "./mvc/routeCollection";
 import { ControllerFactory } from "./mvc/controllerFactory";
 import { SchemaCollection } from "./schema/schemaCollection";
 import { ModelBindings } from "./mvc/modelBindings";
-import { DependencyContainer } from "./ioc/dependencyContainer";
-import { Repository } from "./data/repository";
-import { FileStorage } from "./data/fileStorage";
 
 interface ServerOptions {
   title: string;
@@ -19,11 +16,9 @@ interface ServerOptions {
 
 export class Server {
   #fastifyInstance: FastifyInstance;
-  #options: ServerOptions;
 
-  constructor(options: ServerOptions) {
+  constructor() {
     this.#fastifyInstance = fastify();
-    this.#options = options;
   }
 
   async start() {
@@ -54,28 +49,19 @@ export class Server {
   }
 
   async #setupOpenApi() {
-    await this.#fastifyInstance.register(fastifySwagger, {
-      openapi: {
-        info: {
-          title: this.#options.title,
-          description: this.#options.description ,
-          version: this.#options.version,
-        },
-      }
-    })
+    await this.#fastifyInstance.register(fastifySwagger);
     await this.#fastifyInstance.register(fastifySwaggerUI, {
       routePrefix: '/documentation'
-    })
+    });
   }
 
   #setupRouter() {
     for (const route of RouteCollection.getInstance().routes) {
       const controller = ControllerFactory.getInstance().get(route.controller);
+      const schemaName = ModelBindings.getInstance().get(route.controller, route.action);
+      const schema = schemaName ? SchemaCollection.getInstance().getSchema(schemaName) : undefined;
 
       const method = (controller as any)[route.action];
-
-      const schemaName = ModelBindings.getInstance().get(route.controller, route.action);
-      const schema = schemaName ? SchemaCollection.getInstance().getJsonSchema(schemaName) : undefined;
 
       this.#fastifyInstance[route.httpVerb](route.path, {
         schema

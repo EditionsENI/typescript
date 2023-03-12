@@ -1,35 +1,23 @@
-type SchemaFrom = 'params' | 'querystring' | 'body';
-
-type SchemaPropertyIntOptions = {
+type SchemaIntegerProperty = {
   type: 'integer';
   minimum?: number;
 };
 
-type SchemaPropertyStringOptions = {
+type SchemaStringProperty = {
   type: 'string';
   pattern?: string;
 }
 
-type SchemaPropertyBaseOptions = {
+type SchemaBaseProperty = {
   description: string;
-  optional?: true;
-  from: SchemaFrom;
 }
 
-export type SchemaPropertyOptions = SchemaPropertyBaseOptions & (SchemaPropertyIntOptions | SchemaPropertyStringOptions);
+export type SchemaPropertyOptions = SchemaBaseProperty & (SchemaIntegerProperty | SchemaStringProperty);
 
 export interface Schema {
-  [key: string]: SchemaPropertyOptions
-}
-
-interface JsonSchemaProperty {
-  type: 'object',
-  properties: { [key: string]: Omit<SchemaPropertyOptions, 'from'>}
-  required: Array<string>
-}
-
-export interface JsonSchema {
-  body?: JsonSchemaProperty,
-  params?: JsonSchemaProperty,
-  querystring?: JsonSchemaProperty
+  body: {
+    type: 'object',
+    properties: Record<string, SchemaPropertyOptions>,
+    required: Array<string>
+  },
 }

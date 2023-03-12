@@ -1,9 +1,7 @@
-import { Binding } from "./types";
-
 export class ModelBindings {
   static #instance: ModelBindings;
 
-  #bindings: Map<Binding, string>;
+  #bindings: Map<`${string}#${string}`, string>;
 
   private constructor() {
     this.#bindings = new Map();

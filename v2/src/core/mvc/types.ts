@@ -6,5 +6,3 @@ export interface IRoute {
   httpVerb: HttpVerb;
   path: string;
 };
-
-export type Binding = `${string}#${string}`;
