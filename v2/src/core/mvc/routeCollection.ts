@@ -1,4 +1,4 @@
-import { HttpVerb, IAction, IRoute } from "./types";
+import { IRoute } from "./types";
 
 export class RouteCollection {
   static #instance: RouteCollection;
@@ -22,14 +22,11 @@ export class RouteCollection {
   }
 
   add(
-    action: IAction,
-    httpVerb: HttpVerb,
-    path: string
+    route: Omit<IRoute, 'path'>
   ) {
     this.#routes.push({
-      ...action,
-      httpVerb,
-      path: `/${action.controller.replace('Controller', '').toLowerCase()}/${path}`
+      ...route,
+      path: `/${route.controller}`
     });
   }
 }

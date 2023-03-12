@@ -1,13 +1,10 @@
-export type HttpVerb = "get" | "post" | "patch";
+export type HttpVerb = "get" | "post";
 
-export interface IAction {
+export interface IRoute {
   controller: string;
-  method: string;
-}
-
-export interface IRoute extends IAction {
+  action: string;
   httpVerb: HttpVerb;
   path: string;
-}
+};
 
 export type Binding = `${string}#${string}`;

@@ -27,7 +27,7 @@ export class Server {
   async initialize() {
     await this.#setupOpenApi();
     this.initializeDependencies();
-    ControllerFactory.getInstance().initialize();
+    await this.initializeControllers();
     this.#setupRouter();
 
     await this.#fastifyInstance.ready();
@@ -37,6 +37,10 @@ export class Server {
   initializeDependencies() {
     DependencyContainer.getInstance().register('repository', Repository);
     DependencyContainer.getInstance().register('storage', FileStorage);
+  }
+
+  async initializeControllers() {
+    await import('../controllers/employeeController');
   }
 
   async #setupOpenApi() {
@@ -58,13 +62,13 @@ export class Server {
     for (const route of RouteCollection.getInstance().routes) {
       const controller = ControllerFactory.getInstance().get(route.controller);
 
-      const method: Function = (controller as any)[route.method];
+      const method: Function = (controller as any)[route.action];
 
       if (typeof method !== 'function') {
         throw new Error(`Action is not a function`);
       }
 
-      const schemaName = ModelBindings.getInstance().get(route.controller, route.method);
+      const schemaName = ModelBindings.getInstance().get(route.controller, route.action);
       const schema = schemaName ? SchemaCollection.getInstance().getJsonSchema(schemaName) : undefined;
 
       this.#fastifyInstance[route.httpVerb](route.path, {

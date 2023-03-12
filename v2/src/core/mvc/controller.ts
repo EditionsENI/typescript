@@ -1,7 +1,5 @@
 import { ControllerFactory } from "./controllerFactory";
 
-export const Controller = () => {
-  return (target: new (...args: unknown[]) => unknown, context: ClassDecoratorContext) => {
-    ControllerFactory.getInstance().register(target);
-  };
+export const Controller = <TConstructor extends new (...args: unknown[]) => unknown>(target: TConstructor, context: ClassDecoratorContext<TConstructor>) => {
+  ControllerFactory.getInstance().register(target);
 };

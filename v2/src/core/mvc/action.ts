@@ -2,33 +2,25 @@ import { HttpVerb } from "./types";
 import { RouteCollection } from "./routeCollection";
 
 const action = <
-  TController, 
+  TController extends Object, 
   TArguments extends any[], 
   TReturn
->(httpVerb: HttpVerb, path?: string) => {
+>(httpVerb: HttpVerb) => {
   return (
     target: (this: TController, ...args: TArguments) => TReturn,
     { name, addInitializer }: ClassMethodDecoratorContext<TController>
   ) => {
-    addInitializer(function (this) {
+    addInitializer(function () {
       RouteCollection.getInstance().add({
-        controller: (this as any).constructor.name,
-        method: name.toString()},
-        httpVerb,
-        path || "");
+        controller: this.constructor.name.replace('Controller', '').toLowerCase(),
+        action: name.toString(), 
+        httpVerb
+      });
     });
   };
 };
 
 
-export const Get = (path?: string) => {
-  return action("get", path);
-};
+export const Get = action("get");
 
-export const Post = (path?: string) => {
-  return action("post", path);
-};
-
-export const Patch = (path?: string) => {
-  return action("patch", path);
-};
+export const Post = action("post");
