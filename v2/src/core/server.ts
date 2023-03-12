@@ -1,6 +1,8 @@
 import fastify, { FastifyInstance } from "fastify";
 import fastifySwagger from '@fastify/swagger';
 import fastifySwaggerUI from '@fastify/swagger-ui';
+import { join } from "path";
+import { readdir } from "fs/promises";
 import { RouteCollection } from "./mvc/routeCollection";
 import { ControllerFactory } from "./mvc/controllerFactory";
 import { SchemaCollection } from "./schema/schemaCollection";
@@ -24,23 +26,31 @@ export class Server {
     this.#options = options;
   }
 
-  async initialize() {
+  async start() {
     await this.#setupOpenApi();
-    this.initializeDependencies();
-    await this.initializeControllers();
+    await this.#initializeControllers();
     this.#setupRouter();
 
     await this.#fastifyInstance.ready();
     this.#fastifyInstance.swagger();
+
+    try {
+      await  this.#fastifyInstance.listen({ port: 3000 });
+    } catch (err) {
+      this.#fastifyInstance.log.error(err);
+      process.exit(1);
+    }
   }
 
-  initializeDependencies() {
-    DependencyContainer.getInstance().register('repository', Repository);
-    DependencyContainer.getInstance().register('storage', FileStorage);
-  }
+  async #initializeControllers() {
+    const controllersPath = join(__dirname, '..', 'controllers');
+    const files = await readdir(controllersPath, { withFileTypes: true });
 
-  async initializeControllers() {
-    await import('../controllers/employeeController');
+    const importFiles = files.filter((file) => file.name.endsWith('.js')).map(
+      (fileName) => import(join(controllersPath, fileName.name))
+    );
+  
+    await Promise.all(importFiles);
   }
 
   async #setupOpenApi() {
@@ -62,11 +72,7 @@ export class Server {
     for (const route of RouteCollection.getInstance().routes) {
       const controller = ControllerFactory.getInstance().get(route.controller);
 
-      const method: Function = (controller as any)[route.action];
-
-      if (typeof method !== 'function') {
-        throw new Error(`Action is not a function`);
-      }
+      const method = (controller as any)[route.action];
 
       const schemaName = ModelBindings.getInstance().get(route.controller, route.action);
       const schema = schemaName ? SchemaCollection.getInstance().getJsonSchema(schemaName) : undefined;
@@ -74,20 +80,9 @@ export class Server {
       this.#fastifyInstance[route.httpVerb](route.path, {
         schema
       }, async (req, res) => {
-        const result = await method.bind(controller)(req);
+        const result = await method.call(controller, req);
         res.send(result);
       });
     }
-  }
-
-  listen() {
-    this.#fastifyInstance.listen({ port: 3000 }, (err, address) => {
-      if (err) {
-        console.error(err);
-        process.exit(1);
-      }
-
-      console.log(`Server listening at ${address}`);
-    });
   }
 }

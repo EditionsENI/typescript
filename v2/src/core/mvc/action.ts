@@ -3,17 +3,15 @@ import { RouteCollection } from "./routeCollection";
 
 const action = <
   TController extends Object, 
-  TArguments extends any[], 
-  TReturn
 >(httpVerb: HttpVerb) => {
   return (
-    target: (this: TController, ...args: TArguments) => TReturn,
-    { name, addInitializer }: ClassMethodDecoratorContext<TController>
+    target: (this: TController, ...args: any[]) => unknown,
+    context: ClassMethodDecoratorContext<TController>
   ) => {
-    addInitializer(function () {
+    context.addInitializer(function () {
       RouteCollection.getInstance().add({
         controller: this.constructor.name,
-        action: name.toString(), 
+        action: context.name.toString(), 
         httpVerb
       });
     });

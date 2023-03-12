@@ -13,7 +13,6 @@ import { Server } from './core/server';
     version: '1.0.0'
   });
 
-  await server.initialize();
-  server.listen();
+  await server.start();
 }
 )()
