@@ -3,24 +3,23 @@ import { ModelBindings } from "./modelBindings";
 
 export const Model = <
   TController extends Object, 
-  TArguments,
+  TModel extends Object,
   TReturn
->(modelClass: new () => TArguments) => {
+>(modelConstructor: new () => TModel) => {
   return (
-    target: (this: TController, arg: TArguments) => TReturn,
+    target: (this: TController, arg: TModel) => TReturn,
     { name, addInitializer } : ClassMethodDecoratorContext<TController>
   ) => {
     addInitializer(function () {
-      new modelClass();
-      ModelBindings.getInstance().bind(this.constructor.name, name.toString(), modelClass.name);
+      new modelConstructor();
+      ModelBindings.getInstance().bind(this.constructor.name, name.toString(), modelConstructor.name);
 
       const executeWithModel = (req: FastifyRequest) => {
+        const model = new modelConstructor();
 
-        const model: TArguments = {
-          ...(req.body as any),
-          ...(req.query as any),
-          ...(req.params as any)
-        };
+        if(typeof req.body === 'object') {
+          Object.assign(model, req.body);
+        }
 
         return target.call(this, model);
       }
