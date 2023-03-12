@@ -26,10 +26,6 @@ export class SchemaCollection {
     });
   }
 
-  has(schemaName: string) {
-    return this.#schemas.has(schemaName);
-  }
-
   getJsonSchema(schemaName: string) {
     const schema = this.#schemas.get(schemaName);
 

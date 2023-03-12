@@ -20,9 +20,6 @@ class SchemaCollection {
             [propertyName]: options
         });
     }
-    has(schemaName) {
-        return this.#schemas.has(schemaName);
-    }
     getJsonSchema(schemaName) {
         const schema = this.#schemas.get(schemaName);
         if (!schema)
