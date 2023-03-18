@@ -2,22 +2,21 @@ import { Schema, SchemaPropertyOptions } from "./types";
 
 export class SchemaCollection {
   static #instance: SchemaCollection;
-
   #schemas: Map<string, Schema> = new Map();
 
-  private constructor() {
-    
-  }
-
-  static getInstance(): SchemaCollection {
+  static getInstance(): SchemaCollection{
     if (!this.#instance) {
       this.#instance = new SchemaCollection();
     }
-
+  
     return this.#instance;
   }
 
-  add(schemaName: string, propertyName: string, options: SchemaPropertyOptions) {
+  add(
+    schemaName: string, 
+    propertyName: string, 
+    options: SchemaPropertyOptions
+  ) {
     const schema = this.#schemas.get(schemaName) || {
       body: {
         type: 'object',
@@ -25,7 +24,6 @@ export class SchemaCollection {
         required: []
       },
     } satisfies Schema;
-
     schema.body.properties[propertyName] = options;
     schema.body.required.push(propertyName);
 
@@ -34,5 +32,5 @@ export class SchemaCollection {
 
   getSchema(schemaName: string) {
     return this.#schemas.get(schemaName);
-  }
+  }  
 }

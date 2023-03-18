@@ -12,7 +12,7 @@ export class CreateEmployeeModel {
     type: 'string'
   })
   lastName!: string;
-
+  
   @SchemaProperty({
     description: `Employee's email`,
     type: 'string',
@@ -25,5 +25,5 @@ export class CreateEmployeeModel {
     type: 'integer',
     minimum: 0
   })
-  salary!: number;
+  salary!: number;  
 }

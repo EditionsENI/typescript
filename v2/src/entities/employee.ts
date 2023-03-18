@@ -1,4 +1,4 @@
-import { IEntity } from '../core/data/types';
+import { IEntity } from "../core/data/types";
 
 export class Employee implements IEntity {
   id!: string;
@@ -7,3 +7,4 @@ export class Employee implements IEntity {
   email!: string;
   salary!: number;
 }
+ 

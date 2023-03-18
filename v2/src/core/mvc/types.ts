@@ -5,4 +5,4 @@ export interface IRoute {
   action: string;
   httpVerb: HttpVerb;
   path: string;
-};
+}

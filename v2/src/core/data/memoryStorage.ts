@@ -1,17 +1,19 @@
 import { IEntity, IStorage } from "./types";
 
-export class MemoryStorage<TEntity extends IEntity> implements IStorage<IEntity> {
+export class MemoryStorage<
+  TEntity extends IEntity
+> implements IStorage<IEntity> {
   protected entities: Array<TEntity>;
 
   constructor() {
     this.entities = [];
   }
-
+  
   async getEntities() {
     return Promise.resolve(this.entities);
   }
-
-  async save(entity: TEntity): Promise<void> {
+  
+  save(entity: TEntity) {
     const index = this.entities.findIndex(e => e.id === entity.id);
 
     if (index === -1) {
@@ -20,6 +22,5 @@ export class MemoryStorage<TEntity extends IEntity> implements IStorage<IEntity>
       this.entities[index] = entity;
     }
     return Promise.resolve();
-  }
-
+  }  
 }

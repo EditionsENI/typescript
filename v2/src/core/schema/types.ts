@@ -1,20 +1,24 @@
+type SchemaFrom = "body";
+
+type SchemaBaseProperty = {
+  description: string;
+};
+
 type SchemaIntegerProperty = {
-  type: 'integer';
+  type: "integer";
   minimum?: number;
 };
 
 type SchemaStringProperty = {
-  type: 'string';
+  type: "string";
   pattern?: string;
-}
+};
 
-type SchemaBaseProperty = {
-  description: string;
-}
+export type SchemaPropertyOptions = SchemaBaseProperty & (
+  SchemaIntegerProperty | SchemaStringProperty
+);
 
-export type SchemaPropertyOptions = SchemaBaseProperty & (SchemaIntegerProperty | SchemaStringProperty);
-
-export interface Schema {
+export type Schema = {
   body: {
     type: 'object',
     properties: Record<string, SchemaPropertyOptions>,

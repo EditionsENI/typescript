@@ -3,7 +3,9 @@ import { join } from "path";
 import { MemoryStorage } from "./memoryStorage";
 import { IEntity } from "./types";
 
-export class FileStorage<TEntity extends IEntity> extends MemoryStorage<TEntity> {
+export class FileStorage<
+  TEntity extends IEntity
+> extends MemoryStorage<TEntity> {
   #loaded?: true;
   #jsonPath: string;
 
@@ -25,7 +27,11 @@ export class FileStorage<TEntity extends IEntity> extends MemoryStorage<TEntity>
     if(!this.#loaded) {
       const fileExists = await this.#exists();
       if(!fileExists) {
-        await writeFile(this.#jsonPath, JSON.stringify([]), 'utf-8');
+        await writeFile(
+          this.#jsonPath, 
+          JSON.stringify([]), 
+          'utf-8'
+        );
       }
   
       const json = await readFile(this.#jsonPath, 'utf-8');
@@ -42,6 +48,9 @@ export class FileStorage<TEntity extends IEntity> extends MemoryStorage<TEntity>
   async save(entity: TEntity): Promise<void> {
     await this.#load();
     super.save(entity);
-    await writeFile(this.#jsonPath, JSON.stringify(this.entities), 'utf-8');
+    await writeFile(
+      this.#jsonPath, 
+      JSON.stringify(this.entities), 'utf-8'
+    );
   }
 }
