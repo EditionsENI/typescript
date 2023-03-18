@@ -1,14 +1,14 @@
-import { IEntity, Storage } from "./types";
+import { IEntity, IStorage } from "./types";
 
-export class MemoryStorage<TEntity extends IEntity> implements Storage<IEntity> {
-  protected entities!: Array<TEntity>;
+export class MemoryStorage<TEntity extends IEntity> implements IStorage<IEntity> {
+  protected entities: Array<TEntity>;
 
   constructor() {
     this.entities = [];
   }
 
   async getEntities() {
-    return this.entities;
+    return Promise.resolve(this.entities);
   }
 
   async save(entity: TEntity): Promise<void> {
@@ -19,5 +19,7 @@ export class MemoryStorage<TEntity extends IEntity> implements Storage<IEntity> 
     } else {
       this.entities[index] = entity;
     }
+    return Promise.resolve();
   }
+
 }

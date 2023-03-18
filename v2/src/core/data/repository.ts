@@ -1,10 +1,10 @@
 import { Inject } from "../ioc/inject";
-import { IEntity, Storage } from "./types";
+import { IEntity, IStorage } from "./types";
 import * as uuid from 'uuid';
 
 export class Repository<TEntity extends IEntity> {
   @Inject
-  #storage!: Storage<TEntity>;
+  #storage!: IStorage<TEntity>;
 
   async retreiveAll() {
     return this.#storage.getEntities();
