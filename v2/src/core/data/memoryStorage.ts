@@ -1,7 +1,7 @@
-import { IEntity, IStorage } from "./types";
+import type { IEntity, IStorage } from "./types";
 
 export class MemoryStorage<
-  TEntity extends IEntity
+TEntity extends IEntity
 > implements IStorage<IEntity> {
   protected entities: Array<TEntity>;
 
@@ -13,7 +13,7 @@ export class MemoryStorage<
     return Promise.resolve(this.entities);
   }
   
-  save(entity: TEntity) {
+  async save(entity: TEntity) {
     const index = this.entities.findIndex(e => e.id === entity.id);
 
     if (index === -1) {
@@ -22,5 +22,7 @@ export class MemoryStorage<
       this.entities[index] = entity;
     }
     return Promise.resolve();
-  }  
+    
+  }
+  
 }

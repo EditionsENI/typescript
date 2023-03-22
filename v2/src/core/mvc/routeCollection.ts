@@ -1,4 +1,4 @@
-import { IRoute } from "./types";
+import type { IRoute } from "./types";
 
 export class RouteCollection {
   static #instance: RouteCollection;
@@ -6,7 +6,7 @@ export class RouteCollection {
 
   get routes() {
     return this.#routes;
-  } 
+  }  
 
   private constructor() {
     this.#routes = [];
@@ -19,11 +19,13 @@ export class RouteCollection {
   
     return this.#instance;
   }
-
-  add(route: Omit<IRoute, 'path'>) {
+  
+  add(route: Omit<IRoute, "path">) {
     this.#routes.push({
       ...route,
-      path: `/${route.controller.replace('Controller', '').toLowerCase()}`
-    });
+      path: `/${
+        route.controller.replace("Controller", "").toLowerCase()}`
+      }
+    );    
   }  
 }

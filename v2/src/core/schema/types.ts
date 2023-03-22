@@ -1,5 +1,3 @@
-type SchemaFrom = "body";
-
 type SchemaBaseProperty = {
   description: string;
 };

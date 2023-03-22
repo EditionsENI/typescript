@@ -11,7 +11,7 @@ export class FileStorage<
 
   constructor() {
     super();
-    this.#jsonPath = join(__dirname, 'db.json');
+    this.#jsonPath = join(__dirname, "db.json");
   }
 
   async #exists() {
@@ -30,11 +30,11 @@ export class FileStorage<
         await writeFile(
           this.#jsonPath, 
           JSON.stringify([]), 
-          'utf-8'
+          "utf-8"
         );
       }
   
-      const json = await readFile(this.#jsonPath, 'utf-8');
+      const json = await readFile(this.#jsonPath, "utf-8");
       this.entities = JSON.parse(json) as Array<TEntity>;
       this.#loaded = true;
     }

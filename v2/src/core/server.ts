@@ -1,8 +1,8 @@
 import fastify, { FastifyInstance } from "fastify";
-import { join } from "path";
-import { readdir } from "fs/promises";
 import { RouteCollection } from "./mvc/routeCollection";
 import { ControllerFactory } from "./mvc/controllerFactory";
+import { join } from "path";
+import { readdir } from "fs/promises";
 import { SchemaCollection } from "./schema/schemaCollection";
 import { ModelBindings } from "./mvc/modelBindings";
 import fastifySwagger from "@fastify/swagger";
@@ -22,39 +22,50 @@ export class Server {
       controllersPath, 
       { withFileTypes: true }
     );
-    
-    const importFiles = files.filter((file) =>   
-    file.name.endsWith('.js')).map(
-      (fileName) => import(join(controllersPath, fileName.name))
+          
+    const filesToImport = files.filter((file) =>   
+      file
+        .name
+        .endsWith(".js"))
+        .map((fileName) => import(
+          join(controllersPath, fileName.name)
+        )
     );
-    await Promise.all(importFiles);
+
+    await Promise.all(filesToImport);
   }
 
+    
   #setupRouter() {
     for (const route of RouteCollection.getInstance().routes) {
       const controller = ControllerFactory
-  .getInstance()
-  .get(route.controller);
-  const schemaName = ModelBindings.getInstance().get(
-    route.controller, 
-    route.action
-  );
-  const schema = schemaName 
+        .getInstance()
+        .get(route.controller);
+
+        const schemaName = ModelBindings.getInstance().get(
+          route.controller, 
+          route.action
+        );
+
+        const schema = schemaName 
   ? SchemaCollection.getInstance().getSchema(schemaName) 
   : undefined;
 
-  console.table(schemaName);
-
+        
+          
       const method = (controller as any)[route.action];
 
-      this.#fastifyInstance[route.httpVerb](route.path, { schema }, async (
+      this.#fastifyInstance[route.httpVerb](route.path, {
+        schema
+      }, 
+       async (
         req, 
         res) => {
           const result = await method.call(controller, req);
-          res.send(result);
-          
-      });
-    }    
+          res.send(result);                    
+        });  
+      }
+        
   }
 
   async #setupOpenApi() {
@@ -63,13 +74,14 @@ export class Server {
       routePrefix: '/documentation'
     });
     
-  }  
+  }
+  
 
   async start() {
     await this.#setupOpenApi();
     await this.#initializeControllers();
     this.#setupRouter();
-  
+      
     try {
       await  this.#fastifyInstance.listen({ port: 3000 });
     } catch (err) {
@@ -77,5 +89,5 @@ export class Server {
       process.exit(1);
     }
   }
-  
+        
 }

@@ -11,7 +11,7 @@ export const Inject = <TClass, TValue>(
     const dependencyKey = name.toString();
     return DependencyContainer.getInstance().get<TValue>(
       isPrivate 
-        ? dependencyKey.replace('#', '') 
+        ? dependencyKey.replace("#", "") 
         : dependencyKey
     );
   }

@@ -1,18 +1,19 @@
 export class DependencyContainer {
   static #instance: DependencyContainer;
   #dependencies: Map<string, new (...args: unknown[]) => unknown>;
-  
+
   private constructor() {
     this.#dependencies = new Map();
   }
-
   static getInstance(): DependencyContainer {
     if (!this.#instance) {
       this.#instance = new DependencyContainer();
     }
-
+  
     return this.#instance;
   }
+  
+
 
   register<TDependency>(
     dependencyKey: string, 
@@ -20,7 +21,7 @@ export class DependencyContainer {
   ) {
     this.#dependencies.set(dependencyKey, ctor)
   }
-
+  
   get<T>(dependencyKey: string): T {
     const ctor = this.#dependencies.get(dependencyKey);
   
@@ -32,4 +33,5 @@ export class DependencyContainer {
       
     return new ctor() as T;
   }
+   
 }

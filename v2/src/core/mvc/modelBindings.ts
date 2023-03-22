@@ -5,15 +5,15 @@ export class ModelBindings {
   private constructor() {
 
   }
-
+  
   static getInstance(): ModelBindings{
     if (!this.#instance) {
-      this.#instance = new ModelBindings();
+      this.#instance = new ModelBindings ();
     }
   
     return this.#instance;
   }
-  
+
   bind(
     controllerName: string, 
     actionName: string, 

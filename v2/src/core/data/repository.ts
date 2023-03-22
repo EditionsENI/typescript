@@ -1,21 +1,20 @@
-import { IEntity, IStorage } from "./types";
-import * as uuid from 'uuid';
 import { Inject } from "../ioc/inject";
+import type { IEntity, IStorage } from "./types";
+import { randomUUID } from "crypto";
 
 export class Repository<TEntity extends IEntity> {
   @Inject
-  readonly #storage!: IStorage<TEntity>;
+  #storage!: IStorage<TEntity>;
 
   async retreiveAll() {
     return this.#storage.getEntities();
   }
 
-  async create(entityWithoutId: Omit<TEntity, 'id'>) {
+  async create(entityWithoutId: Omit<TEntity, "id">) {
     const entity = {
       ...entityWithoutId,
-      id: uuid.v4()
+      id: randomUUID()
     };
-    
-    await this.#storage.save(entity as TEntity);    
-  }  
+    await this.#storage.save(entity as TEntity);
+  }
 }

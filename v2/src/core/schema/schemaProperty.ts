@@ -1,5 +1,5 @@
 import { SchemaCollection } from "./schemaCollection";
-import { SchemaPropertyOptions } from "./types";
+import type { SchemaPropertyOptions } from "./types";
 
 export const SchemaProperty = <TModel extends Object>(
   options: SchemaPropertyOptions
@@ -15,5 +15,6 @@ export const SchemaProperty = <TModel extends Object>(
         options
       );
     });
+    
   };  
 };
