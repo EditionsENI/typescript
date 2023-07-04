@@ -6,7 +6,7 @@ export class Repository<TEntity extends IEntity> {
   @Inject
   #storage!: IStorage<TEntity>;
 
-  async retreiveAll() {
+  async retrieveAll() {
     return this.#storage.getEntities();
   }
 

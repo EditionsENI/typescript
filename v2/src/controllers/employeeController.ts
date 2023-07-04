@@ -17,7 +17,7 @@ export class EmployeeController {
 
   @Get
   async getAll() {
-    return this.#repository.retreiveAll();
+    return this.#repository.retrieveAll();
   }
 
   @Post
